@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>e-Kagawad — Barangay Document Request and Tracking System</title>
+
+<!--
+  ============================================================
+  INDEX.HTML
+  ------------------------------------------------------------
+  This is the ONLY html page in the whole system. It works as
+  a "single-page app": the <div id="app"> below is empty at
+  first, and JavaScript (see js/main.js) fills it in with
+  whatever screen the user is currently on (landing page,
+  login form, resident dashboard, admin dashboard, etc).
+
+  The system is now backed by a real PHP + MySQL API under
+  /api. js/api.js is the only file that talks to that API
+  directly (fetch calls); every other file just calls
+  api.get(...) / api.post(...) and works with plain JS objects,
+  the same way it used to work with the old sample data arrays.
+  ============================================================ -->
+
+<!-- Google Fonts used across the whole site -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+<!-- All the visual styling (unchanged) -->
+<link rel="stylesheet" href="css/style.css">
+<!-- NEW: styles for the new pieces only (dialog windows, profile hover card, +63 phone box,
+     password eye, clickable notifications). Must load AFTER style.css. -->
+<link rel="stylesheet" href="css/additions.css">
+</head>
+<body>
+
+<!-- Everything the user sees gets drawn inside this div by JavaScript -->
+<div id="app"></div>
+
+<!--
+  ============================================================
+  SCRIPT LOAD ORDER MATTERS:
+  api.js must load first (everything else calls api.get/api.post).
+  data.js and icons.js load next because other files use the
+  data/icons they define. dialog.js (NEW) needs icons.js and must
+  load before state.js. main.js MUST load LAST because it
+  contains the boot() call that actually starts the app.
+  ============================================================
+-->
+<script src="js/api.js"></script>
+<script src="js/data.js"></script>
+<script src="js/icons.js"></script>
+<script src="js/dialog.js"></script>
+<script src="js/state.js"></script>
+<script src="js/names.js"></script>
+<script src="js/media.js"></script>
+<script src="js/public.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/resident.js"></script>
+<script src="js/admin.js"></script>
+<script src="js/staff.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>
