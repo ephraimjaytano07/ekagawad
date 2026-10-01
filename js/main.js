@@ -17,6 +17,7 @@
    ============================================================ */
 
 function render(preserveScroll=false){
+  if(typeof resetNavDrawer==='function') resetNavDrawer(); // a re-render replaces the menu, so clear its open state first
   const savedScrollY = window.scrollY;
   const root = document.getElementById('app');
   let html = '';

@@ -148,3 +148,14 @@ ekagawad/
   if this will be internet-facing.
 - Back up the `ekagawad` database regularly — it now holds real resident
   and transaction data.
+
+
+## Responsive layout (new)
+
+- `css/responsive.css` holds every breakpoint rule. It loads last in `index.html`, so `style.css` and `additions.css` are unchanged.
+  - Mobile 320–767px: one column. Tablet 768–1024px: two columns. Desktop 1025px and up: full layout.
+- `js/nav.js` runs the hamburger menu (about 100 lines, no libraries).
+  - Public site: full nav bar on desktop, slide-out drawer on tablet and mobile.
+  - Resident and admin portals: the sidebar becomes a slide-out drawer with a slim top bar.
+  - Accessibility: `aria-expanded`, `aria-label`, `aria-controls`, `role="navigation"`, Esc to close, focus trap, focus returns to the button, background scroll locked while open.
+- Text uses `clamp()` and `rem`, tap targets are at least 44×44px on touch screens, and no screen scrolls sideways.

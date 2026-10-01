@@ -24,18 +24,45 @@ function scrollPublicSection(id){
   window.scrollTo({top:Math.max(0, top), behavior:'smooth'});
 }
 
+/* Public navigation.
+   Desktop (>1024px): brand + horizontal links + Login/Register button.
+   Tablet & mobile (<=1024px): brand + hamburger button that opens a slide-out drawer.
+   The drawer open/close logic lives in js/nav.js (toggleNavDrawer / closeNavDrawer). */
+const PUB_LINKS = [
+  ['landing','Home'],['services','Services'],['about','About Us'],['faqs','FAQs'],['contact','Contact']
+];
+
+function pubNavAction(id){
+  return id==='landing' ? "nav('landing')" : `scrollPublicSection('${id}')`;
+}
+
 function pubNav(){
-  return `<div class="pubnav">
-    <div class="brand">${logoMark(28)} e-Kagawad System</div>
-    <div class="pubnav-links">
-      <a onclick="nav('landing')">Home</a>
-      <a onclick="scrollPublicSection('services')">Services</a>
-      <a onclick="scrollPublicSection('about')">About Us</a>
-      <a onclick="scrollPublicSection('faqs')">FAQs</a>
-      <a onclick="scrollPublicSection('contact')">Contact</a>
-      <button class="btn btn-primary" onclick="nav('loginChoice')">${icon('right-to-bracket')} Login / Register</button>
+  const desktopLinks = PUB_LINKS.map(([id,label])=>
+    `<a href="#${id==='landing'?'':id}" onclick="event.preventDefault();${pubNavAction(id)}">${label}</a>`).join('');
+  const drawerLinks = PUB_LINKS.map(([id,label])=>
+    `<a href="#${id==='landing'?'':id}" onclick="event.preventDefault();closeNavDrawer();${pubNavAction(id)}">${label}</a>`).join('');
+  return `<header class="pubnav">
+    <a class="brand" href="#" onclick="event.preventDefault();nav('landing')" aria-label="e-Kagawad home">${logoMark(28)} <span class="brand-text">e-Kagawad System</span></a>
+    <nav class="pubnav-links" role="navigation" aria-label="Main">
+      ${desktopLinks}
+      <button type="button" class="btn btn-primary" onclick="nav('loginChoice')">${icon('right-from-bracket')} Login / Register</button>
+    </nav>
+    <button type="button" class="nav-toggle" data-nav-toggle aria-label="Open menu" aria-expanded="false" aria-controls="nav-drawer" onclick="toggleNavDrawer()">
+      <span class="nav-toggle-ic nav-toggle-open" aria-hidden="true">${icon('bars')}</span>
+      <span class="nav-toggle-ic nav-toggle-close" aria-hidden="true">${icon('xmark')}</span>
+    </button>
+  </header>
+  <div class="nav-backdrop" data-nav-backdrop onclick="closeNavDrawer()" aria-hidden="true"></div>
+  <nav id="nav-drawer" class="nav-drawer" data-nav-drawer role="navigation" aria-label="Mobile menu" aria-hidden="true">
+    <div class="nav-drawer-head">
+      <span class="brand">${logoMark(26)} e-Kagawad</span>
+      <button type="button" class="nav-drawer-close" aria-label="Close menu" onclick="closeNavDrawer()">${icon('xmark')}</button>
     </div>
-  </div>`;
+    <div class="nav-drawer-links">${drawerLinks}</div>
+    <div class="nav-drawer-actions">
+      <button type="button" class="btn btn-primary" onclick="closeNavDrawer();nav('loginChoice')">${icon('right-from-bracket')} Login / Register</button>
+    </div>
+  </nav>`;
 }
 
 function viewLanding(){

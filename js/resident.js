@@ -329,11 +329,12 @@ function residentSidebar(){
     ['dashboard','gauge-high','Dashboard'],['requestDocuments','file-circle-plus','Request Documents'],
     ['myRequests','list-check','My Requests'],['notifications','bell','Notifications'],['account','user-gear','Account']
   ];
-  return `<div class="sidebar">
+  return `<nav class="sidebar" id="nav-drawer" data-nav-drawer role="navigation" aria-label="Resident menu">
+    <button type="button" class="nav-drawer-close sidebar-close" aria-label="Close menu" onclick="closeNavDrawer()">${icon('xmark')}</button>
     <div class="brand">${logoMark(26)} e-Kagawad</div>
-    ${items.map(([k,ic,label])=>`<div class="nav-item ${state.residentPage===k?'active':''}" onclick="navResident('${k}')"><span class="nav-ic">${icon(ic)}</span> ${label}</div>`).join('')}
-    <div class="sidebar-bottom"><div class="nav-item logout-item" onclick="logout()"><span class="nav-ic">${icon('right-from-bracket')}</span> Logout</div></div>
-  </div>`;
+    ${items.map(([k,ic,label])=>`<div class="nav-item ${state.residentPage===k?'active':''}" role="button" tabindex="0" ${state.residentPage===k?'aria-current="page"':''} onclick="navResident('${k}')"><span class="nav-ic">${icon(ic)}</span> ${label}</div>`).join('')}
+    <div class="sidebar-bottom"><div class="nav-item logout-item" role="button" tabindex="0" onclick="logout()"><span class="nav-ic">${icon('right-from-bracket')}</span> Logout</div></div>
+  </nav>`;
 }
 
 function residentShell(){
@@ -346,7 +347,7 @@ function residentShell(){
   else if(state.residentPage==='requestView') content=residentRequestView();
   else if(state.residentPage==='notifications') content=residentNotifications();
   else if(state.residentPage==='account') content=residentAccount();
-  return `<div class="portal">${residentSidebar()}<div class="main"><div class="main-inner">${content}</div></div></div>${toastHtml()}`;
+  return `<div class="portal">${portalMobileBar()}${residentSidebar()}<div class="nav-backdrop" data-nav-backdrop onclick="closeNavDrawer()" aria-hidden="true"></div><div class="main"><div class="main-inner">${content}</div></div></div>${toastHtml()}`;
 }
 
 function residentDashboard(){

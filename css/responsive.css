@@ -1,0 +1,167 @@
+/* ============================================================
+   RESPONSIVE.CSS  (NEW FILE - load it LAST, after additions.css)
+   ------------------------------------------------------------
+   One place for everything that changes with screen size, so
+   style.css and additions.css stay untouched.
+
+   BREAKPOINTS
+     Mobile   320px - 767px    single column, hamburger menu
+     Tablet   768px - 1024px   two columns,   hamburger menu
+     Desktop  1025px and up    full layout,   full navigation bar
+
+   WHAT IS IN HERE
+     1. Safety rules  - nothing may push the page sideways
+     2. Hamburger button, backdrop and slide-out drawers
+     3. Fluid typography and spacing (clamp / rem / vw)
+     4. Tablet layout  (2 columns)
+     5. Mobile layout  (1 column)
+     6. 44 x 44px tap targets on touch screens
+   ============================================================ */
+
+/* ---------- 1. SAFETY RULES ---------- */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+img,svg,video,canvas{max-width:100%;}
+/* grid / flex children may shrink below their content width instead of forcing a scrollbar */
+.cards-grid > *, .mission-vision-grid > *, .gallery-strip > *, .contact-grid > *, .footer-top > *,
+.role-row > *, .form-grid-2 > *, .stat-row > *, .doc-grid > *, .review-grid > *, .kv > *, .stub-kv > *,
+.hero-inner, .section, .footer-inner, .main, .main-inner, .topbar > *{min-width:0;}
+.svc-card, .mission-vision-card, .contact-card, .footer-col, .choice-card{overflow-wrap:anywhere;}
+.contact-panel .row{flex-wrap:wrap;gap:4px 16px;}
+.pubnav .brand{min-width:0;}
+.pubnav .brand-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.table-wrap{max-width:100%;-webkit-overflow-scrolling:touch;}
+
+/* ---------- 2. HAMBURGER BUTTON, BACKDROP, DRAWERS ---------- */
+
+/* the button: hidden on desktop */
+.nav-toggle{display:none;position:relative;width:44px;height:44px;flex-shrink:0;border-radius:12px;color:var(--navy);background:transparent;border:1px solid var(--line);align-items:center;justify-content:center;transition:background-color .2s ease,border-color .2s ease;}
+.nav-toggle:hover{background:var(--mist);border-color:var(--blue-bright);}
+.nav-toggle-ic{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:22px;transition:opacity .2s ease,transform .3s cubic-bezier(.2,.8,.2,1);}
+.nav-toggle-close{opacity:0;transform:rotate(-90deg) scale(.6);}
+.nav-toggle.is-open .nav-toggle-open{opacity:0;transform:rotate(90deg) scale(.6);}
+.nav-toggle.is-open .nav-toggle-close{opacity:1;transform:none;}
+
+/* public drawer + portal top bar + backdrop: not used on desktop */
+.nav-drawer, .nav-backdrop, .portal-bar, .sidebar-close{display:none;}
+
+/* close (X) button used inside both drawers */
+.nav-drawer-close{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--slate);flex-shrink:0;transition:background-color .2s ease,color .2s ease;}
+.nav-drawer-close:hover{background:var(--mist);color:var(--navy);}
+
+@media (max-width:1024px){
+  /* --- public site: links collapse into the hamburger --- */
+  .pubnav{padding:.625rem clamp(1rem,4vw,2rem);gap:1rem;}
+  .pubnav-links{display:none;}
+  .nav-toggle{display:inline-flex;}
+
+  /* --- dark overlay behind an open drawer --- */
+  .nav-backdrop{display:block;position:fixed;inset:0;z-index:120;background:rgba(11,30,61,.55);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);opacity:0;visibility:hidden;transition:opacity .3s ease,visibility 0s linear .3s;}
+  .nav-backdrop.is-open{opacity:1;visibility:visible;transition-delay:0s;}
+  html.nav-open, html.nav-open body{overflow:hidden;}
+
+  /* --- public drawer: slides in from the right --- */
+  .nav-drawer{display:flex;flex-direction:column;position:fixed;top:0;right:0;bottom:0;z-index:130;width:min(88vw,22rem);background:#fff;padding:1rem 1rem 1.25rem;overflow-y:auto;overscroll-behavior:contain;box-shadow:-20px 0 50px rgba(11,30,61,.25);
+    transform:translateX(100%);visibility:hidden;transition:transform .3s cubic-bezier(.2,.8,.2,1),visibility 0s linear .3s;}
+  .nav-drawer.is-open{transform:none;visibility:visible;transition-delay:0s;}
+  .nav-drawer-head{display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:0 0 1rem;margin-bottom:.5rem;border-bottom:1px solid var(--line);}
+  .nav-drawer-links{display:flex;flex-direction:column;gap:.25rem;padding:.5rem 0;}
+  .nav-drawer-links a{display:flex;align-items:center;min-height:48px;padding:0 1rem;border-radius:12px;font-size:1rem;font-weight:600;color:var(--ink);transition:background-color .2s ease,color .2s ease;}
+  .nav-drawer-links a:hover{background:var(--mist);color:var(--blue-mid);}
+  .nav-drawer-actions{margin-top:auto;padding-top:1rem;border-top:1px solid var(--line);}
+  .nav-drawer-actions .btn{width:100%;justify-content:center;}
+
+  /* --- portal (resident / admin): sidebar becomes a drawer from the left --- */
+  .portal-bar{display:flex;align-items:center;gap:.75rem;position:sticky;top:0;z-index:50;padding:.625rem clamp(1rem,4vw,1.75rem);background:rgba(255,255,255,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .sidebar{display:flex;width:min(84vw,18rem);z-index:130;overscroll-behavior:contain;box-shadow:20px 0 50px rgba(11,30,61,.35);
+    transform:translateX(-100%);visibility:hidden;transition:transform .3s cubic-bezier(.2,.8,.2,1),visibility 0s linear .3s;}
+  .sidebar.is-open{transform:none;visibility:visible;transition-delay:0s;}
+  .sidebar-close{display:flex;align-self:flex-end;color:rgba(255,255,255,.75);margin:-8px -4px -14px 0;}
+  .sidebar-close:hover{background:rgba(255,255,255,.1);color:#fff;}
+  .main{margin-left:0;width:100%;}
+  .main-inner{padding:clamp(1rem,3vw,1.5rem) clamp(1rem,4vw,1.75rem) 3rem;}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .nav-drawer,.sidebar,.nav-backdrop,.nav-toggle-ic{transition-duration:.01ms !important;}
+}
+@media print{ .portal-bar,.nav-backdrop,.nav-toggle,.nav-drawer{display:none !important;} }
+
+/* ---------- 3. FLUID TYPOGRAPHY + SPACING (all screen sizes) ---------- */
+.hero{padding:clamp(6.5rem,4.5rem + 8vw,10rem) clamp(1rem,4vw,2rem) clamp(3.5rem,2rem + 6vw,6.25rem);}
+.hero h1{font-size:clamp(1.875rem,1.35rem + 2.6vw,3rem);}
+.hero p{font-size:clamp(.9375rem,.9rem + .25vw,1.0625rem);max-width:min(34rem,100%);}
+.hero-eyebrow{font-size:clamp(.72rem,.68rem + .2vw,.8125rem);}
+.section{padding:clamp(2.75rem,2rem + 4vw,4.375rem) clamp(1rem,4vw,2rem);}
+.section-head h2{font-size:clamp(1.5rem,1.2rem + 1.4vw,1.875rem);}
+.section-subhead h2{font-size:clamp(1.3rem,1.1rem + 1vw,1.5rem);}
+.section-head p,.section-subhead p{font-size:clamp(.9rem,.875rem + .2vw,1rem);}
+.mission-vision-grid{margin-bottom:clamp(3rem,2rem + 5vw,6.875rem);}
+.svc-card h4{font-size:clamp(.95rem,.9rem + .25vw,1.05rem);}
+.svc-card p,.mission-vision-card p,.mv-list,.contact-card p{font-size:clamp(.84rem,.82rem + .15vw,.9rem);}
+.mission-vision-card h3{font-size:clamp(1.05rem,1rem + .4vw,1.2rem);}
+.faq-item .q{font-size:clamp(.875rem,.85rem + .2vw,.975rem);}
+.footer-inner{padding:clamp(2.5rem,2rem + 3vw,3.5rem) clamp(1rem,4vw,2rem) 1.75rem;}
+.choice-card h2{font-size:clamp(1.625rem,1.3rem + 1.6vw,2rem);}
+.topbar h2{font-size:clamp(1.25rem,1.05rem + 1vw,1.5625rem);}
+
+/* ---------- 4. TABLET: 768px - 1024px  (2 columns) ---------- */
+@media (min-width:768px) and (max-width:1024px){
+  .cards-grid,
+  .mission-vision-grid,
+  .contact-grid,
+  .gallery-strip,
+  .stat-row,
+  .doc-grid,
+  .form-grid-2,
+  .role-row,
+  .footer-top{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .mini-stats-row{grid-template-columns:repeat(3,minmax(0,1fr));}
+  .footer-top{gap:2rem;}
+  .footer-bottom{flex-direction:row;text-align:left;}
+}
+
+/* ---------- 5. MOBILE: 320px - 767px  (1 column) ---------- */
+@media (max-width:767px){
+  .cards-grid,
+  .mission-vision-grid,
+  .contact-grid,
+  .gallery-strip,
+  .stat-row,
+  .doc-grid,
+  .form-grid-2,
+  .role-row,
+  .mini-stats-row,
+  .footer-top{grid-template-columns:minmax(0,1fr);}
+  .footer-top{gap:1.75rem;}
+  .footer-bottom{flex-direction:column;text-align:center;}
+  .hero-actions .btn{flex:1 1 100%;justify-content:center;}
+  .mission-vision-card{padding:1.25rem;gap:1rem;}
+  .g-tile{height:clamp(11rem,52vw,15rem);}
+  .choice-card{padding:2rem 1.25rem;border-radius:20px;}
+  .choice-wrap{padding-left:1rem;padding-right:1rem;}
+  .topbar{align-items:flex-start;}
+  /* 16px inputs stop iOS from zooming the page (and shifting it sideways) on focus */
+  .field input,.field textarea,.field select,input,textarea,select{font-size:16px;}
+}
+@media (max-width:479px){
+  .kv,.stub-kv,.pw-rules{grid-template-columns:minmax(0,1fr);}
+  .contact-card,.mission-vision-card{flex-direction:column;}
+}
+
+/* ---------- 6. TAP TARGETS: at least 44 x 44px on touch screens ---------- */
+@media (max-width:1024px), (pointer:coarse){
+  .btn,.btn-sm{min-height:44px;}
+  .btn-sm{display:inline-flex;align-items:center;justify-content:center;}
+  .nav-item{min-height:44px;}
+  .notif-bell{width:44px;height:44px;}
+  .profile-chip{min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;}
+  .pw-toggle{width:44px;height:44px;right:2px;}
+  .field input,.field select{min-height:44px;}
+  .footer-col{gap:0;}
+  .footer-col a{min-height:44px;display:inline-flex;align-items:center;}
+  .pubnav .brand,.portal-bar .brand{min-height:44px;}
+  .back-link{min-height:44px;align-items:center;}
+  .faq-item .q{min-height:44px;}
+  .svc-link{min-height:44px;}
+  .role-card,.quick-btn,.g-tile{min-height:44px;}
+}

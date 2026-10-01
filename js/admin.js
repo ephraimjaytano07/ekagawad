@@ -425,11 +425,12 @@ function adminSidebar() {
   if (isAdminLevel()) items.push(['staff', 'user-shield', 'Moderators']);
   items.push(['account', 'user-gear', 'Account']);
   const title = isAdminLevel() ? 'e-Kagawad Admin' : 'e-Kagawad Moderator';
-  return `<div class="sidebar">
+  return `<nav class="sidebar" id="nav-drawer" data-nav-drawer role="navigation" aria-label="${title} menu">
+    <button type="button" class="nav-drawer-close sidebar-close" aria-label="Close menu" onclick="closeNavDrawer()">${icon('xmark')}</button>
     <div class="brand">${logoMark(26)} ${title}</div>
-    ${items.map(([k, ic, label]) => `<div class="nav-item ${state.adminPage === k ? 'active' : ''}" onclick="navAdmin('${k}')"><span class="nav-ic">${icon(ic)}</span> ${label}</div>`).join('')}
-    <div class="sidebar-bottom"><div class="nav-item logout-item" onclick="logout()"><span class="nav-ic">${icon('right-from-bracket')}</span> Logout</div></div>
-  </div>`;
+    ${items.map(([k, ic, label]) => `<div class="nav-item ${state.adminPage === k ? 'active' : ''}" role="button" tabindex="0" ${state.adminPage === k ? 'aria-current="page"' : ''} onclick="navAdmin('${k}')"><span class="nav-ic">${icon(ic)}</span> ${label}</div>`).join('')}
+    <div class="sidebar-bottom"><div class="nav-item logout-item" role="button" tabindex="0" onclick="logout()"><span class="nav-ic">${icon('right-from-bracket')}</span> Logout</div></div>
+  </nav>`;
 }
 
 function adminShell() {
@@ -444,7 +445,7 @@ function adminShell() {
   else if (state.adminPage === 'reports') content = adminReports();
   else if (state.adminPage === 'staff') content = isAdminLevel() ? adminStaff() : adminDashboard();
   else if (state.adminPage === 'account') content = adminAccount();
-  return `<div class="portal">${adminSidebar()}<div class="main"><div class="main-inner">${content}</div></div></div>${toastHtml()}`;
+  return `<div class="portal">${portalMobileBar()}${adminSidebar()}<div class="nav-backdrop" data-nav-backdrop onclick="closeNavDrawer()" aria-hidden="true"></div><div class="main"><div class="main-inner">${content}</div></div></div>${toastHtml()}`;
 }
 
 function adminDashboard() {
